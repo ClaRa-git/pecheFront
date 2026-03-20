@@ -1,121 +1,93 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import PrivateRoute from './components/PrivateRoute'
+import AdminRoute from './components/AdminRoute'
 
-function App() {
-  const [count, setCount] = useState(0)
+// Pages publiques
+import Shop from './pages/Shop'
+import ProductDetail from './pages/ProductDetail'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import Contests from './pages/Contests'
 
+// Pages client
+import Cart from './pages/Cart'
+import Checkout from './pages/Checkout'
+import Profile from './pages/Profile'
+import Orders from './pages/Orders'
+import Permits from './pages/Permits'
+import MyContests from './pages/MyContests'
+
+// Pages admin
+import Dashboard from './pages/admin/Dashboard'
+import AdminProducts from './pages/admin/Products'
+import AdminOrders from './pages/admin/Orders'
+import AdminPermits from './pages/admin/Permits'
+import AdminContests from './pages/admin/Contests'
+
+// Layout
+import Navbar from './components/Navbar'
+
+export default function App() {
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <BrowserRouter>
+      <Navbar />
+      <main className="container mx-auto px-4 py-8">
+        <Routes>
 
-      <div className="ticks"></div>
+          {/* Routes publiques */}
+          <Route path="/"                element={<Shop />} />
+          <Route path="/products/:id"    element={<ProductDetail />} />
+          <Route path="/login"           element={<Login />} />
+          <Route path="/register"        element={<Register />} />
+          <Route path="/contests"        element={<Contests />} />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+          {/* Routes client (JWT requis) */}
+          <Route path="/cart" element={
+            <PrivateRoute><Cart /></PrivateRoute>
+          } />
+          <Route path="/checkout" element={
+            <PrivateRoute><Checkout /></PrivateRoute>
+          } />
+          <Route path="/profile" element={
+            <PrivateRoute><Profile /></PrivateRoute>
+          } />
+          <Route path="/orders" element={
+            <PrivateRoute><Orders /></PrivateRoute>
+          } />
+          <Route path="/permits" element={
+            <PrivateRoute><Permits /></PrivateRoute>
+          } />
+          <Route path="/my-contests" element={
+            <PrivateRoute><MyContests /></PrivateRoute>
+          } />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+          {/* Routes admin (ROLE_ADMIN requis) */}
+          <Route path="/admin" element={
+            <AdminRoute><Dashboard /></AdminRoute>
+          } />
+          <Route path="/admin/products" element={
+            <AdminRoute><AdminProducts /></AdminRoute>
+          } />
+          <Route path="/admin/orders" element={
+            <AdminRoute><AdminOrders /></AdminRoute>
+          } />
+          <Route path="/admin/permits" element={
+            <AdminRoute><AdminPermits /></AdminRoute>
+          } />
+          <Route path="/admin/contests" element={
+            <AdminRoute><AdminContests /></AdminRoute>
+          } />
+
+          {/* 404 */}
+          <Route path="*" element={
+            <div className="text-center py-20">
+              <h1 className="text-4xl font-bold text-gray-400">404</h1>
+              <p className="text-gray-500 mt-2">Page introuvable</p>
+            </div>
+          } />
+
+        </Routes>
+      </main>
+    </BrowserRouter>
   )
 }
-
-export default App
